@@ -1,0 +1,30 @@
+<resources>
+    <string name="app_name">Demo Fingerprint Auth</string>
+    <string name="coccoc_pin_setting_duration_immediately" />
+    <string name="coccoc_pin_setting_duration_summary_immediately"><![CDATA[Immediately after you leave or close C&#7889;c C&#7889;c browser]]></string>
+    <string name="coccoc_pin_setting_duration_summary"><![CDATA[After <ph name=\"DURATION\">%s</ph> after you leave or close C&#7889;c C&#7889;c browser]]></string>
+    <string name="coccoc_pin_title_enter_pin_with_fingerprint">Use fingerprint or enter PIN</string>
+    <string name="coccoc_pin_title_enter_pin">Enter PIN</string>
+    <string name="coccoc_pin_msg_enter_pin"><![CDATA[to open C&#7889;c C&#7889;c]]></string>
+    <string name="coccoc_pin_msg_locked"><![CDATA[Locked for <ph name=\"SECONDS\">%1$d</ph> seconds]]></string>
+    <string name="coccoc_pin_title_wrong_fingerprint">Not recognized</string>
+    <string name="coccoc_pin_msg_wrong_pin">Try again</string>
+    <string name="coccoc_pin_title_wrong_pin">Wrong PIN</string>
+    <string name="coccoc_pin_title_locked">Too many attemps made.</string>
+    <string name="browser_lock_dialog_title" />
+    <string name="browser_lock_dialog_message_1" />
+    <string name="browser_lock_dialog_message_2" />
+    <string name="browser_lock_dialog_positive_button">positive</string>
+    <string name="browser_lock_dialog_negative_button">negative</string>
+    <string name="coccoc_setting_title_pin">coccoc_setting_title_pin</string>
+    <string name="coccoc_setting_pin_enter_old_pin">coccoc_setting_pin_enter_old_pin</string>
+    <string name="coccoc_setting_pin_second_time">coccoc_setting_pin_second_time</string>
+    <string name="coccoc_setting_pin_first_time">coccoc_setting_pin_first_time</string>
+    <string name="coccoc_setting_pin_not_match">coccoc_setting_pin_not_match</string>
+    <plurals name="coccoc_pin_setting_duration_seconds">{DURATION, plural, =1 {# second} other {#
+        seconds}}
+    </plurals>
+    <plurals name="coccoc_pin_setting_duration_minutes">{DURATION, plural, =1 {# minute} other {#
+        minutes}}
+    </plurals>
+</resources>

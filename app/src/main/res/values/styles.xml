@@ -1,0 +1,41 @@
+<?xml version="1.0" encoding="utf-8"?>
+<resources>
+    <!-- Pin keyboard style -->
+    <style name="PinKeyboardLayout">
+        <item name="android:layout_marginStart">60dp</item>
+        <item name="android:layout_marginEnd">60dp</item>
+    </style>
+
+    <style name="PinKeyboardView">
+        <item name="android:background">?android:attr/selectableItemBackground</item>
+        <item name="android:padding">10dp</item>
+    </style>
+
+    <style name="PinKeyboardNumberView" parent="PinKeyboardView">
+        <item name="android:textSize">26sp</item>
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PinKeyboardControlView" parent="PinKeyboardView">
+        <item name="android:tint">#ffffff</item>
+        <item name="android:scaleType">centerInside</item>
+    </style>
+
+    <style name="PinTitle">
+        <item name="android:textColor">#ffffff</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <style name="PinMessage">
+        <item name="android:textColor">#CCCCCC</item>
+        <item name="android:textSize">18sp</item>
+        <item name="android:gravity">center</item>
+    </style>
+
+    <declare-styleable name="PinKeyNumberView">
+        <attr name="value" format="integer" />
+    </declare-styleable>
+
+</resources>
