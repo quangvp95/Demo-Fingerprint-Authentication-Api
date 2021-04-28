@@ -126,6 +126,8 @@ public class PinUnlockActivity extends SynchronousInitializationActivity impleme
         if (!isFingerprintOn) {
             ivFingerprint.setVisibility(View.GONE);
         } else {
+            ivFingerprint.setOnClickListener(
+                v -> mPinController.startBiometricAuth(PinUnlockActivity.this));
             mPinController.startBiometricAuth(this);
         }
     }
@@ -149,7 +151,7 @@ public class PinUnlockActivity extends SynchronousInitializationActivity impleme
         ForegroundDetector.getInstance().setShouldLock(false);
         PinManager pinManager = PinManager.getInstance();
         if (pinManager.isOpenFromLauncher()) {
-            pinManager.setOpenFromLauncher(false);
+//            pinManager.setOpenFromLauncher(false);
             sendUnlockCompletePendingIntent();
         }
 

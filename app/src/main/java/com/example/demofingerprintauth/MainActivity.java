@@ -8,6 +8,7 @@ import android.view.View;
 
 import org.chromium.base.ContextUtils;
 
+import coccoc.pin.biometric.BiometricManager;
 import coccoc.pin.ui.unlock.PinUnlockActivity;
 
 public class MainActivity extends AppCompatActivity {
@@ -20,14 +21,20 @@ public class MainActivity extends AppCompatActivity {
 
     }
 
-    public void FingerprintManager(View view) {
-        Intent mIntent = new Intent();
+    public void useFingerprintManager(View view) {
+        BiometricManager.sType = BiometricManager.BiometricFeature.FINGERPRINT_MANAGER;
+
+        Intent mIntent = new Intent(this, MainActivity.class);
         // Check if we should show PIN unlock activity
-        if (PinUnlockActivity.launch(this, mIntent)) {
-        }
+        PinUnlockActivity.launch(this, mIntent);
 
     }
 
-    public void BiometricPrompt(View view) {
+    public void useBiometricPrompt(View view) {
+        BiometricManager.sType = BiometricManager.BiometricFeature.BIOMETRIC_PROMPT;
+
+        Intent mIntent = new Intent(this, MainActivity.class);
+        // Check if we should show PIN unlock activity
+        PinUnlockActivity.launch(this, mIntent);
     }
 }

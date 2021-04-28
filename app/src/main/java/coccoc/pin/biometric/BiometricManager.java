@@ -1,138 +1,40 @@
 package coccoc.pin.biometric;
 
 import android.annotation.TargetApi;
-import android.content.Context;
 import android.os.Build;
-import android.security.keystore.KeyGenParameterSpec;
-import android.security.keystore.KeyProperties;
 
-import androidx.core.hardware.fingerprint.FingerprintManagerCompat;
-import androidx.core.os.CancellationSignal;
+import androidx.annotation.IntDef;
+import androidx.fragment.app.FragmentActivity;
 
-import java.io.IOException;
-import java.security.InvalidAlgorithmParameterException;
-import java.security.KeyStore;
-import java.security.KeyStoreException;
-import java.security.NoSuchAlgorithmException;
-import java.security.NoSuchProviderException;
-import java.security.cert.CertificateException;
-import java.util.UUID;
-
-import javax.crypto.Cipher;
-import javax.crypto.KeyGenerator;
-import javax.crypto.SecretKey;
+import java.lang.annotation.Retention;
+import java.lang.annotation.RetentionPolicy;
 
 @TargetApi(Build.VERSION_CODES.M)
-public class BiometricManager {
+public abstract class BiometricManager {
 
-    private static final String KEY_NAME = UUID.randomUUID().toString();
+    @IntDef({BiometricFeature.BIOMETRIC_PROMPT, BiometricFeature.FINGERPRINT_MANAGER})
+    @Retention(RetentionPolicy.SOURCE)
+    public @interface BiometricFeature {
+        int BIOMETRIC_PROMPT = 0;
+        int FINGERPRINT_MANAGER = 1;
+    }
 
-    private Cipher mCipher;
-    private KeyStore mKeyStore;
-    private CancellationSignal mCancellationSignal;
+    public static @BiometricFeature int sType;
 
-    private static BiometricManager sInstance;
-
-    private BiometricManager() {
+    protected BiometricManager() {
     }
 
     public static BiometricManager getInstance() {
-        if (sInstance == null) {
-            sInstance = new BiometricManager();
+        switch (sType) {
+            case BiometricFeature.BIOMETRIC_PROMPT:
+                return BiometricPromptManager.getInstance();
+            case BiometricFeature.FINGERPRINT_MANAGER:
+                return FingerprintManagerCompatManager.getInstance();
         }
-        return sInstance;
+        return BiometricPromptManager.getInstance();
     }
 
-    public void startBiometricAuth(Context context, final BiometricCallback biometricCallback) {
-        generateKey();
+    public abstract void startBiometricAuth(FragmentActivity context, final BiometricCallback biometricCallback);
 
-        if (initCipher()) {
-
-            mCancellationSignal = new CancellationSignal();
-            // TODO(cc_android): Deprecated FingerprintManagerCompat. New androidx_core lib uses
-            // standard dialog popup for biometrics. We need to update Browser Lock UI to use this
-            // popup. Refer to https://medium.com/mindorks/fingerprint-authentication-using-biometricprompt-compat-1466365b4795
-            // and iOS implementation.
-            FingerprintManagerCompat.CryptoObject cryptoObject = new FingerprintManagerCompat.CryptoObject(mCipher);
-            FingerprintManagerCompat fingerprintManagerCompat = FingerprintManagerCompat.from(context);
-            fingerprintManagerCompat.authenticate(cryptoObject, 0, mCancellationSignal,
-                    new FingerprintManagerCompat.AuthenticationCallback() {
-                        @Override
-                        public void onAuthenticationError(int errMsgId, CharSequence errString) {
-                            super.onAuthenticationError(errMsgId, errString);
-                            biometricCallback.onAuthenticationError(errMsgId, errString);
-                        }
-
-                        @Override
-                        public void onAuthenticationHelp(int helpMsgId, CharSequence helpString) {
-                            super.onAuthenticationHelp(helpMsgId, helpString);
-                            biometricCallback.onAuthenticationHelp(helpMsgId, helpString);
-                        }
-
-                        @Override
-                        public void onAuthenticationSucceeded(FingerprintManagerCompat.AuthenticationResult result) {
-                            super.onAuthenticationSucceeded(result);
-                            biometricCallback.onAuthenticationSuccessful();
-                        }
-
-
-                        @Override
-                        public void onAuthenticationFailed() {
-                            super.onAuthenticationFailed();
-                            biometricCallback.onAuthenticationFailed();
-                        }
-                    }, null);
-        }
-    }
-
-    public void stopBiometricAuth() {
-        if (mCancellationSignal != null && !mCancellationSignal.isCanceled()) {
-            mCancellationSignal.cancel();
-            mCancellationSignal = null;
-        }
-    }
-
-
-    private void generateKey() {
-        try {
-            mKeyStore = KeyStore.getInstance("AndroidKeyStore");
-            mKeyStore.load(null);
-
-            KeyGenerator keyGenerator = KeyGenerator.getInstance(KeyProperties.KEY_ALGORITHM_AES, "AndroidKeyStore");
-            keyGenerator.init(new
-                    KeyGenParameterSpec.Builder(KEY_NAME, KeyProperties.PURPOSE_ENCRYPT | KeyProperties.PURPOSE_DECRYPT)
-                    .setBlockModes(KeyProperties.BLOCK_MODE_CBC)
-                    .setUserAuthenticationRequired(true)
-                    .setEncryptionPaddings(KeyProperties.ENCRYPTION_PADDING_PKCS7)
-                    .build());
-
-            keyGenerator.generateKey();
-
-        } catch (KeyStoreException
-                | NoSuchAlgorithmException
-                | NoSuchProviderException
-                | InvalidAlgorithmParameterException
-                | CertificateException
-                | IOException exc) {
-            exc.printStackTrace();
-        }
-    }
-
-
-    private boolean initCipher() {
-        try {
-            mCipher = Cipher.getInstance(
-                    KeyProperties.KEY_ALGORITHM_AES + "/"
-                            + KeyProperties.BLOCK_MODE_CBC + "/"
-                            + KeyProperties.ENCRYPTION_PADDING_PKCS7);
-
-            mKeyStore.load(null);
-            SecretKey key = (SecretKey) mKeyStore.getKey(KEY_NAME,
-                    null);
-            mCipher.init(Cipher.ENCRYPT_MODE, key);
-            return true;
-        } catch (Exception e) {
-            return false;
-        }
-    }
+    public abstract void stopBiometricAuth();
 }

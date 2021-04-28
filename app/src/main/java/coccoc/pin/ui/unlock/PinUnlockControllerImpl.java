@@ -3,6 +3,8 @@ package coccoc.pin.ui.unlock;
 import android.content.Context;
 import android.hardware.biometrics.BiometricPrompt;
 
+import androidx.fragment.app.FragmentActivity;
+
 import coccoc.default_browser.FeatureUsageStat;
 import coccoc.pin.base.PinBaseController;
 import coccoc.pin.biometric.BiometricCallback;
@@ -36,7 +38,7 @@ public class PinUnlockControllerImpl<V extends PinUnlockView> extends PinBaseCon
     }
 
     @Override
-    public void startBiometricAuth(Context context) {
+    public void startBiometricAuth(FragmentActivity context) {
         BiometricManager.getInstance().startBiometricAuth(context, this);
     }
 
